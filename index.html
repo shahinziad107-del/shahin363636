@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Black Falcons | Management Principles</title>
+    <link rel="stylesheet" href="css/fonts.css">
+    <script src="js/tailwindcss.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Orbitron', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            dark: '#0a0f1e',
+                            primary: '#3b82f6',
+                            accent: '#06b6d4',
+                            purple: '#8b5cf6',
+                            glow: '#22d3ee'
+                        }
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #02040a;
+            color: #f8fafc;
+            overflow-x: hidden;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #3b82f6;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #2563eb;
+        }
+
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Scroll Reveal Base Styles */
+        .reveal {
+            opacity: 0;
+            transition: all 1s ease-out;
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: none;
+        }
+
+        .reveal-up {
+            transform: translateY(3rem);
+        }
+
+        .reveal-down {
+            transform: translateY(-3rem);
+        }
+
+        .reveal-left {
+            transform: translateX(3rem);
+        }
+
+        .reveal-right {
+            transform: translateX(-3rem);
+        }
+
+        .cursor-wait {
+            cursor: wait;
+        }
+    </style>
+    <script src="js/lucide.js"></script>
+</head>
+
+<body>
+    <div class="relative min-h-screen bg-brand-dark text-white selection:bg-brand-accent selection:text-brand-dark">
+        <!-- Background Particles Canvas -->
+        <canvas id="bg-particles" class="fixed top-0 left-0 w-full h-full pointer-events-none opacity-60"
+            style="z-index: 0;"></canvas>
+
+        <!-- Navbar -->
+        <nav id="navbar" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-transparent py-6">
+            <div class="max-w-7xl mx-auto px-6 flex items-center justify-between">
+                <!-- Logo -->
+                <div class="flex items-center gap-2 cursor-pointer"
+                    onclick="window.scrollTo({ top: 0, behavior: 'smooth' })">
+                    <div
+                        class="w-8 h-8 bg-gradient-to-br from-brand-primary to-brand-accent rounded-lg rotate-45 flex items-center justify-center shadow-[0_0_15px_rgba(6,182,212,0.5)]">
+                        <span class="text-white font-bold -rotate-45 text-sm">BF</span>
+                    </div>
+                    <span class="font-display font-bold text-xl tracking-wide">BLACK <span
+                            class="text-brand-accent">FALCONS</span></span>
+                </div>
+
+                <!-- Desktop Nav -->
+                <div class="hidden md:flex items-center gap-8">
+                    <button onclick="scrollToSection('history')"
+                        class="text-sm uppercase tracking-wider font-semibold text-gray-400 hover:text-brand-accent transition-colors relative group">
+                        History
+                        <span
+                            class="absolute -bottom-1 left-0 w-0 h-0.5 bg-brand-accent transition-all group-hover:w-full"></span>
+                    </button>
+                    <button onclick="scrollToSection('environment')"
+                        class="text-sm uppercase tracking-wider font-semibold text-gray-400 hover:text-brand-accent transition-colors relative group">
+                        Environment
+                        <span
+                            class="absolute -bottom-1 left-0 w-0 h-0.5 bg-brand-accent transition-all group-hover:w-full"></span>
+                    </button>
+                    <button onclick="scrollToSection('structure')"
+                        class="text-sm uppercase tracking-wider font-semibold text-gray-400 hover:text-brand-accent transition-colors relative group">
+                        Structure
+                        <span
+                            class="absolute -bottom-1 left-0 w-0 h-0.5 bg-brand-accent transition-all group-hover:w-full"></span>
+                    </button>
+                    <button onclick="scrollToSection('culture')"
+                        class="text-sm uppercase tracking-wider font-semibold text-gray-400 hover:text-brand-accent transition-colors relative group">
+                        Culture
+                        <span
+                            class="absolute -bottom-1 left-0 w-0 h-0.5 bg-brand-accent transition-all group-hover:w-full"></span>
+                    </button>
+                    <button onclick="scrollToSection('downloads')"
+                        class="text-sm uppercase tracking-wider font-semibold text-gray-400 hover:text-brand-accent transition-colors relative group">
+                        Downloads
+                        <span
+                            class="absolute -bottom-1 left-0 w-0 h-0.5 bg-brand-accent transition-all group-hover:w-full"></span>
+                    </button>
+
+                    <!-- Copy Link Button -->
+                    <button id="copy-link-btn"
+                        class="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 transition-all duration-300 group ml-4"
+                        title="Copy Link">
+                        <i data-lucide="link" id="copy-icon"
+                            class="w-4 h-4 text-brand-accent group-hover:scale-110 transition-transform"></i>
+                        <span id="copy-text"
+                            class="text-xs font-medium text-gray-300 group-hover:text-white">Link</span>
+                    </button>
+                </div>
+
+                <!-- Mobile Nav Toggle -->
+                <button class="md:hidden text-white" id="mobile-menu-btn">
+                    <i data-lucide="menu" id="menu-icon" class="w-6 h-6"></i>
+                </button>
+            </div>
+
+            <!-- Mobile Menu -->
+            <div id="mobile-menu"
+                class="md:hidden absolute top-full left-0 right-0 bg-brand-dark/95 backdrop-blur-xl border-b border-white/10 transition-all duration-300 overflow-hidden max-h-0">
+                <div class="flex flex-col p-6 gap-4">
+                    <button onclick="scrollToSection('history')"
+                        class="text-left text-lg font-medium text-gray-300 hover:text-brand-accent">History</button>
+                    <button onclick="scrollToSection('environment')"
+                        class="text-left text-lg font-medium text-gray-300 hover:text-brand-accent">Environment</button>
+                    <button onclick="scrollToSection('structure')"
+                        class="text-left text-lg font-medium text-gray-300 hover:text-brand-accent">Structure</button>
+                    <button onclick="scrollToSection('culture')"
+                        class="text-left text-lg font-medium text-gray-300 hover:text-brand-accent">Culture</button>
+                    <button onclick="scrollToSection('downloads')"
+                        class="text-left text-lg font-medium text-gray-300 hover:text-brand-accent">Downloads</button>
+
+                    <button id="mobile-copy-link-btn"
+                        class="flex items-center gap-2 text-gray-400 hover:text-white mt-4 pt-4 border-t border-white/10">
+                        <i data-lucide="link" id="mobile-copy-icon" class="w-[18px] h-[18px]"></i>
+                        <span id="mobile-copy-text">Copy Website Link</span>
+                    </button>
+                </div>
+            </div>
+        </nav>
+
+        <main class="relative z-10">
+            <!-- Hero Section -->
+            <section id="hero"
+                class="relative min-h-screen flex flex-col justify-center items-center px-6 pt-20 overflow-hidden">
+                <!-- Abstract Glow Background with Parallax -->
+                <div id="hero-glow-1"
+                    class="absolute top-1/4 left-1/4 w-96 h-96 bg-brand-primary/20 rounded-full blur-[100px] transition-transform duration-100 ease-out">
+                </div>
+                <div id="hero-glow-2"
+                    class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-brand-purple/20 rounded-full blur-[100px] transition-transform duration-100 ease-out">
+                </div>
+
+                <div class="text-center z-10 max-w-4xl mx-auto">
+                    <div class="reveal reveal-up">
+                        <div
+                            class="inline-block px-4 py-2 mb-6 rounded-full border border-brand-accent/30 bg-brand-accent/10 backdrop-blur-sm animate-pulse-slow">
+                            <span class="text-brand-accent uppercase tracking-widest text-xs font-bold">Group 1
+                                Presentation</span>
+                        </div>
+                    </div>
+
+                    <div class="reveal reveal-up" style="transition-delay: 200ms;">
+                        <h1
+                            class="font-display text-5xl md:text-7xl lg:text-8xl font-bold mb-6 leading-tight bg-clip-text text-transparent bg-gradient-to-r from-white via-blue-100 to-brand-primary drop-shadow-[0_0_15px_rgba(59,130,246,0.5)]">
+                            Principles of Management
+                        </h1>
+                    </div>
+
+                    <div class="reveal reveal-up" style="transition-delay: 400ms;">
+                        <p class="text-xl md:text-2xl text-gray-300 mb-8 font-light leading-relaxed h-8">
+                            In a <span
+                                class="text-brand-glow font-semibold border-r-2 border-brand-glow pr-1 animate-pulse"
+                                id="typing-text"></span>
+                        </p>
+                    </div>
+
+                    <div class="reveal reveal-up" style="transition-delay: 500ms;">
+                        <button onclick="scrollToSection('history')"
+                            class="mb-12 px-8 py-4 bg-brand-primary text-white rounded-full font-bold text-lg shadow-[0_0_20px_rgba(59,130,246,0.5)] hover:shadow-[0_0_30px_rgba(59,130,246,0.8)] hover:scale-105 transition-all duration-300 flex items-center gap-2 mx-auto group">
+                            Start Journey
+                            <i data-lucide="play-circle"
+                                class="w-5 h-5 group-hover:translate-x-1 transition-transform"></i>
+                        </button>
+                    </div>
+
+                    <div class="reveal reveal-up" style="transition-delay: 600ms;">
+                        <p class="text-gray-400 max-w-2xl mx-auto mb-12 leading-relaxed">
+                            Successful management is not a fixed science but an <span
+                                class="text-white font-semibold">art</span> that depends entirely on the external
+                            environment.
+                        </p>
+                    </div>
+
+                    <!-- Team Section -->
+                    <div class="reveal reveal-up" style="transition-delay: 800ms;">
+                        <div
+                            class="glass-panel rounded-2xl p-8 max-w-3xl mx-auto hover:bg-white/5 transition-colors duration-500 group">
+                            <div
+                                class="flex items-center justify-center gap-3 mb-6 text-brand-primary group-hover:scale-110 transition-transform duration-300">
+                                <i data-lucide="users" class="w-6 h-6"></i>
+                                <h3 class="text-lg font-bold uppercase tracking-widest">Black Falcons Team</h3>
+                            </div>
+                            <div class="flex flex-wrap justify-center gap-4">
+                                <span
+                                    class="px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-sm hover:bg-brand-primary/20 hover:border-brand-primary/50 hover:text-white hover:shadow-[0_0_15px_rgba(59,130,246,0.4)] transition-all duration-300 cursor-default">Ziad
+                                    Shahin</span>
+                                <span
+                                    class="px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-sm hover:bg-brand-primary/20 hover:border-brand-primary/50 hover:text-white hover:shadow-[0_0_15px_rgba(59,130,246,0.4)] transition-all duration-300 cursor-default">Ahmed
+                                    Hossam</span>
+                                <span
+                                    class="px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-sm hover:bg-brand-primary/20 hover:border-brand-primary/50 hover:text-white hover:shadow-[0_0_15px_rgba(59,130,246,0.4)] transition-all duration-300 cursor-default">Bellal
+                                    Arafa</span>
+                                <span
+                                    class="px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-sm hover:bg-brand-primary/20 hover:border-brand-primary/50 hover:text-white hover:shadow-[0_0_15px_rgba(59,130,246,0.4)] transition-all duration-300 cursor-default">Khaled
+                                    Mohammed</span>
+                                <span
+                                    class="px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-sm hover:bg-brand-primary/20 hover:border-brand-primary/50 hover:text-white hover:shadow-[0_0_15px_rgba(59,130,246,0.4)] transition-all duration-300 cursor-default">Ahmed
+                                    Morsy</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce text-brand-accent/50 cursor-pointer"
+                    onclick="scrollToSection('history')">
+                    <i data-lucide="arrow-down" class="w-8 h-8"></i>
+                </div>
+            </section>
+
+            <div class="space-y-24 pb-24">
+                <!-- History Section -->
+                <section id="history" class="py-20 px-6 max-w-7xl mx-auto">
+                    <div class="reveal reveal-up">
+                        <div class="mb-16 border-l-4 border-brand-primary pl-6">
+                            <h2 class="text-4xl md:text-5xl font-display font-bold mb-4">Evolution of Thought</h2>
+                            <p class="text-xl text-gray-400">From strict mechanics to human relations.</p>
+                        </div>
+                    </div>
+
+                    <div class="grid md:grid-cols-2 gap-12 items-start">
+                        <div class="space-y-8 relative">
+                            <!-- Timeline Line -->
+                            <div
+                                class="absolute left-8 top-0 bottom-0 w-0.5 bg-gradient-to-b from-brand-primary/20 to-transparent md:hidden">
+                            </div>
+
+                            <!-- Event 1 -->
+                            <div class="reveal reveal-left" style="transition-delay: 0ms;">
+                                <div
+                                    class="glass-panel p-6 rounded-xl flex gap-6 relative group hover:bg-white/5 transition-colors border-orange-400/50 border-l-4 border-t-0 border-b-0 border-r-0">
+                                    <div class="shrink-0 mt-1 p-3 rounded-full bg-white/5 backdrop-blur-sm">
+                                        <i data-lucide="scale" class="w-6 h-6 text-orange-400"></i>
+                                    </div>
+                                    <div>
+                                        <span class="text-xs font-mono text-gray-500 mb-1 block">Era 1</span>
+                                        <h3
+                                            class="text-xl font-bold mb-2 group-hover:text-brand-accent transition-colors">
+                                            Scientific Management</h3>
+                                        <p class="text-gray-400 leading-relaxed">Focus on laws, production, and physical
+                                            efficiency. Workers as parts of a machine.</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Event 2 -->
+                            <div class="reveal reveal-left" style="transition-delay: 150ms;">
+                                <div
+                                    class="glass-panel p-6 rounded-xl flex gap-6 relative group hover:bg-white/5 transition-colors border-yellow-400/50 border-l-4 border-t-0 border-b-0 border-r-0">
+                                    <div class="shrink-0 mt-1 p-3 rounded-full bg-white/5 backdrop-blur-sm">
+                                        <i data-lucide="lightbulb" class="w-6 h-6 text-yellow-400"></i>
+                                    </div>
+                                    <div>
+                                        <span class="text-xs font-mono text-gray-500 mb-1 block">1924</span>
+                                        <h3
+                                            class="text-xl font-bold mb-2 group-hover:text-brand-accent transition-colors">
+                                            Hawthorne Studies</h3>
+                                        <p class="text-gray-400 leading-relaxed">The shift to the Social Aspect. Proved
+                                            that attention to workers and social factors increases productivity more
+                                            than physical conditions.</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Event 3 -->
+                            <div class="reveal reveal-left" style="transition-delay: 300ms;">
+                                <div
+                                    class="glass-panel p-6 rounded-xl flex gap-6 relative group hover:bg-white/5 transition-colors border-brand-primary/50 border-l-4 border-t-0 border-b-0 border-r-0">
+                                    <div class="shrink-0 mt-1 p-3 rounded-full bg-white/5 backdrop-blur-sm">
+                                        <i data-lucide="users" class="w-6 h-6 text-brand-primary"></i>
+                                    </div>
+                                    <div>
+                                        <span class="text-xs font-mono text-gray-500 mb-1 block">Era 2</span>
+                                        <h3
+                                            class="text-xl font-bold mb-2 group-hover:text-brand-accent transition-colors">
+                                            Chester Barnard</h3>
+                                        <p class="text-gray-400 leading-relaxed">Zone of Indifference: Workers comply if
+                                            orders don't conflict with personal interests.</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Event 4 -->
+                            <div class="reveal reveal-left" style="transition-delay: 450ms;">
+                                <div
+                                    class="glass-panel p-6 rounded-xl flex gap-6 relative group hover:bg-white/5 transition-colors border-brand-purple/50 border-l-4 border-t-0 border-b-0 border-r-0">
+                                    <div class="shrink-0 mt-1 p-3 rounded-full bg-white/5 backdrop-blur-sm">
+                                        <i data-lucide="handshake" class="w-6 h-6 text-brand-purple"></i>
+                                    </div>
+                                    <div>
+                                        <span class="text-xs font-mono text-gray-500 mb-1 block">Era 3</span>
+                                        <h3
+                                            class="text-xl font-bold mb-2 group-hover:text-brand-accent transition-colors">
+                                            Mary Parker Follett</h3>
+                                        <p class="text-gray-400 leading-relaxed">Conflict Resolution & Integration. Both
+                                            parties find a mutually satisfying solution rather than compromise.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="sticky top-32">
+                            <div class="reveal reveal-right" style="transition-delay: 300ms;">
+                                <div
+                                    class="glass-panel p-8 rounded-2xl border border-brand-accent/20 bg-gradient-to-br from-brand-dark to-brand-primary/10">
+                                    <h3 class="text-2xl font-bold mb-6 text-brand-glow">The "It Depends" Principle</h3>
+                                    <p class="text-gray-300 mb-8 text-lg">
+                                        The <strong>Contingency School</strong> teaches us that there is no single "best
+                                        way" to manage.
+                                    </p>
+                                    <div
+                                        class="relative h-48 bg-black/30 rounded-lg flex items-center justify-center overflow-hidden">
+                                        <div class="absolute inset-0 flex items-center justify-center">
+                                            <div
+                                                class="w-32 h-32 border-4 border-dashed border-gray-600 rounded-full animate-[spin_10s_linear_infinite]">
+                                            </div>
+                                            <div
+                                                class="w-24 h-24 border-4 border-dotted border-brand-primary rounded-full absolute animate-[spin_8s_linear_infinite_reverse]">
+                                            </div>
+                                            <div class="text-center z-10">
+                                                <span class="block text-sm text-gray-500">Management</span>
+                                                <span class="block text-xl font-bold text-white">Response</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <p class="mt-6 text-sm text-gray-400 text-center">Unique Situations Require Unique
+                                        Responses</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Environment Section -->
+                <section id="environment" class="py-20 bg-black/30">
+                    <div class="max-w-7xl mx-auto px-6">
+                        <div class="reveal reveal-up">
+                            <div class="text-center mb-16">
+                                <h2 class="text-4xl md:text-5xl font-display font-bold mb-4">The External Environment
+                                </h2>
+                                <p class="text-xl text-gray-400 max-w-2xl mx-auto">
+                                    The organization is an <span class="text-brand-glow font-semibold">Open
+                                        System</span> that continuously interacts with these forces.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                            <!-- Force 1 -->
+                            <div class="reveal reveal-up" style="transition-delay: 0ms;">
+                                <div
+                                    class="h-full p-6 rounded-2xl border border-white/5 hover:border-white/20 transition-all duration-300 hover:-translate-y-2 bg-blue-500/10">
+                                    <div
+                                        class="mb-4 bg-brand-dark/50 w-16 h-16 rounded-xl flex items-center justify-center">
+                                        <i data-lucide="globe" class="w-8 h-8 text-blue-400"></i>
+                                    </div>
+                                    <h3 class="text-xl font-bold mb-3">Economic</h3>
+                                    <p class="text-sm text-gray-400 leading-relaxed">Inflation, Interest Rates,
+                                        Globalization, Wage Levels.</p>
+                                </div>
+                            </div>
+                            <!-- Force 2 -->
+                            <div class="reveal reveal-up" style="transition-delay: 100ms;">
+                                <div
+                                    class="h-full p-6 rounded-2xl border border-white/5 hover:border-white/20 transition-all duration-300 hover:-translate-y-2 bg-purple-500/10">
+                                    <div
+                                        class="mb-4 bg-brand-dark/50 w-16 h-16 rounded-xl flex items-center justify-center">
+                                        <i data-lucide="cpu" class="w-8 h-8 text-purple-400"></i>
+                                    </div>
+                                    <h3 class="text-xl font-bold mb-3">Technological</h3>
+                                    <p class="text-sm text-gray-400 leading-relaxed">AI, Internet, Innovation,
+                                        Disruption of business models.</p>
+                                </div>
+                            </div>
+                            <!-- Force 3 -->
+                            <div class="reveal reveal-up" style="transition-delay: 200ms;">
+                                <div
+                                    class="h-full p-6 rounded-2xl border border-white/5 hover:border-white/20 transition-all duration-300 hover:-translate-y-2 bg-pink-500/10">
+                                    <div
+                                        class="mb-4 bg-brand-dark/50 w-16 h-16 rounded-xl flex items-center justify-center">
+                                        <i data-lucide="users" class="w-8 h-8 text-pink-400"></i>
+                                    </div>
+                                    <h3 class="text-xl font-bold mb-3">Sociocultural</h3>
+                                    <p class="text-sm text-gray-400 leading-relaxed">Demographics, Values, Customs,
+                                        Diversity demands.</p>
+                                </div>
+                            </div>
+                            <!-- Force 4 -->
+                            <div class="reveal reveal-up" style="transition-delay: 300ms;">
+                                <div
+                                    class="h-full p-6 rounded-2xl border border-white/5 hover:border-white/20 transition-all duration-300 hover:-translate-y-2 bg-green-500/10">
+                                    <div
+                                        class="mb-4 bg-brand-dark/50 w-16 h-16 rounded-xl flex items-center justify-center">
+                                        <i data-lucide="cloud-rain" class="w-8 h-8 text-green-400"></i>
+                                    </div>
+                                    <h3 class="text-xl font-bold mb-3">Natural</h3>
+                                    <p class="text-sm text-gray-400 leading-relaxed">Climate change, Disasters, Resource
+                                        availability.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Open System Visualization -->
+                        <div class="reveal reveal-up" style="transition-delay: 400ms;">
+                            <div class="mt-20 glass-panel p-8 rounded-3xl relative overflow-hidden">
+                                <div
+                                    class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-brand-primary to-transparent">
+                                </div>
+
+                                <div
+                                    class="flex flex-col md:flex-row items-center justify-between gap-8 text-center md:text-left">
+                                    <div class="flex-1 p-4 bg-white/5 rounded-xl border border-white/5">
+                                        <span class="text-xs uppercase tracking-widest text-gray-500">Inputs</span>
+                                        <p class="text-lg font-semibold mt-1">Resources</p>
+                                        <p class="text-xs text-gray-400">Raw Materials, Capital</p>
+                                    </div>
+
+                                    <div class="flex flex-col items-center text-brand-accent">
+                                        <div
+                                            class="w-32 h-32 rounded-full border-4 border-brand-accent/20 flex items-center justify-center relative">
+                                            <div
+                                                class="absolute inset-0 rounded-full border-t-4 border-brand-accent animate-spin">
+                                            </div>
+                                            <span class="font-bold text-sm">PROCESS</span>
+                                        </div>
+                                        <i data-lucide="arrow-right" class="rotate-90 md:rotate-0 mt-4 w-6 h-6"></i>
+                                    </div>
+
+                                    <div class="flex-1 p-4 bg-white/5 rounded-xl border border-white/5">
+                                        <span class="text-xs uppercase tracking-widest text-gray-500">Outputs</span>
+                                        <p class="text-lg font-semibold mt-1">Value</p>
+                                        <p class="text-xs text-gray-400">Goods, Services</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Structure Section -->
+                <section id="structure" class="py-20 px-6 max-w-7xl mx-auto">
+                    <div class="flex flex-col md:flex-row justify-between items-end mb-16">
+                        <div class="reveal reveal-up">
+                            <div>
+                                <h2 class="text-4xl md:text-5xl font-display font-bold mb-4">Organizational Structure
+                                </h2>
+                                <p class="text-xl text-gray-400">The blueprint of work. Fitting structure to
+                                    environment.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Toggle Switch -->
+                    <div class="reveal reveal-up">
+                        <div class="flex justify-center mb-12">
+                            <div class="bg-white/5 p-1 rounded-full flex relative">
+                                <!-- Sliding Background -->
+                                <div id="structure-toggle-bg"
+                                    class="absolute top-1 bottom-1 w-[140px] bg-gradient-to-r rounded-full transition-all duration-500 ease-out shadow-lg left-1 from-brand-primary to-blue-600">
+                                </div>
+
+                                <button id="btn-mechanistic" onclick="setStructureTab('mechanistic')"
+                                    class="relative z-10 w-[150px] py-3 rounded-full text-sm font-bold transition-colors duration-300 text-white">
+                                    MECHANISTIC
+                                </button>
+                                <button id="btn-organic" onclick="setStructureTab('organic')"
+                                    class="relative z-10 w-[150px] py-3 rounded-full text-sm font-bold transition-colors duration-300 text-gray-400 hover:text-white">
+                                    ORGANIC
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid md:grid-cols-2 gap-12">
+                        <!-- Dynamic Content -->
+                        <div class="order-2 md:order-1">
+                            <div class="relative h-full min-h-[300px]">
+                                <!-- Mechanistic Content -->
+                                <div id="content-mechanistic"
+                                    class="absolute inset-0 transition-all duration-500 transform opacity-100 translate-x-0">
+                                    <div class="animate-float space-y-4">
+                                        <div
+                                            class="glass-panel p-6 rounded-xl border-l-4 border-brand-primary shadow-[0_0_20px_rgba(59,130,246,0.1)]">
+                                            <h3 class="text-2xl font-bold mb-2 text-white">Stable Environment</h3>
+                                            <ul class="list-disc list-inside text-gray-300 space-y-3">
+                                                <li class="marker:text-brand-primary">Rigid Hierarchy</li>
+                                                <li class="marker:text-brand-primary">Centralized Authority</li>
+                                                <li class="marker:text-brand-primary">Strict Rules (High Formalization)
+                                                </li>
+                                                <li class="marker:text-brand-primary">Vertical Communication</li>
+                                            </ul>
+                                        </div>
+                                        <div
+                                            class="p-4 bg-brand-primary/10 rounded-lg text-center text-sm text-brand-primary font-mono border border-brand-primary/20">
+                                            "Efficiency & Control"
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Organic Content -->
+                                <div id="content-organic"
+                                    class="absolute inset-0 transition-all duration-500 transform opacity-0 -translate-x-10 pointer-events-none">
+                                    <div class="animate-float space-y-4" style="animation-delay: 1s;">
+                                        <div
+                                            class="glass-panel p-6 rounded-xl border-l-4 border-green-500 shadow-[0_0_20px_rgba(34,197,94,0.1)]">
+                                            <h3 class="text-2xl font-bold mb-2 text-white">Dynamic Environment</h3>
+                                            <ul class="list-disc list-inside text-gray-300 space-y-3">
+                                                <li class="marker:text-green-500">Flexible Networks</li>
+                                                <li class="marker:text-green-500">Decentralized</li>
+                                                <li class="marker:text-green-500">Adaptive (Low Formalization)</li>
+                                                <li class="marker:text-green-500">Horizontal Communication</li>
+                                            </ul>
+                                        </div>
+                                        <div
+                                            class="p-4 bg-green-500/10 rounded-lg text-center text-sm text-green-400 font-mono border border-green-500/20">
+                                            "Innovation & Agility"
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Modern Designs Grid -->
+                        <div class="order-1 md:order-2 grid grid-cols-1 gap-4">
+                            <h3 class="text-xl font-bold text-gray-500 uppercase tracking-wider mb-2">Modern Designs
+                            </h3>
+
+                            <div class="reveal reveal-left" style="transition-delay: 100ms;">
+                                <div
+                                    class="group flex items-center gap-4 p-4 bg-white/5 rounded-lg hover:bg-white/10 border border-transparent hover:border-brand-accent/30 transition-all duration-300 cursor-pointer hover:shadow-[0_0_15px_rgba(6,182,212,0.15)]">
+                                    <div
+                                        class="p-3 bg-white/5 rounded-full group-hover:bg-brand-accent/20 transition-colors">
+                                        <i data-lucide="layers" class="w-6 h-6 text-brand-accent"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-bold group-hover:text-brand-accent transition-colors">Matrix
+                                            Structure</h4>
+                                        <p class="text-xs text-gray-400">Dual reporting for efficiency & project focus.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="reveal reveal-left" style="transition-delay: 200ms;">
+                                <div
+                                    class="group flex items-center gap-4 p-4 bg-white/5 rounded-lg hover:bg-white/10 border border-transparent hover:border-brand-purple/30 transition-all duration-300 cursor-pointer hover:shadow-[0_0_15px_rgba(139,92,246,0.15)]">
+                                    <div
+                                        class="p-3 bg-white/5 rounded-full group-hover:bg-brand-purple/20 transition-colors">
+                                        <i data-lucide="network" class="w-6 h-6 text-brand-purple"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-bold group-hover:text-brand-purple transition-colors">Networked
+                                            Team</h4>
+                                        <p class="text-xs text-gray-400">Temporary, cross-functional flexible teams.</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="reveal reveal-left" style="transition-delay: 300ms;">
+                                <div
+                                    class="group flex items-center gap-4 p-4 bg-white/5 rounded-lg hover:bg-white/10 border border-transparent hover:border-orange-400/30 transition-all duration-300 cursor-pointer hover:shadow-[0_0_15px_rgba(251,146,60,0.15)]">
+                                    <div
+                                        class="p-3 bg-white/5 rounded-full group-hover:bg-orange-400/20 transition-colors">
+                                        <i data-lucide="globe" class="w-6 h-6 text-orange-400"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-bold group-hover:text-orange-400 transition-colors">Virtual
+                                            Structure</h4>
+                                        <p class="text-xs text-gray-400">Tech-reliant, no physical boundaries (Uber,
+                                            Airbnb).</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Culture Section -->
+                <section id="culture" class="py-20 bg-gradient-to-b from-brand-dark via-brand-dark to-black">
+                    <div class="max-w-7xl mx-auto px-6">
+                        <div class="reveal reveal-up">
+                            <div class="text-center mb-16">
+                                <h2 class="text-4xl md:text-5xl font-display font-bold mb-4">Corporate Culture</h2>
+                                <p class="text-xl text-gray-400">The Organization's DNA and "Social Glue".</p>
+                            </div>
+                        </div>
+
+                        <div
+                            class="relative max-w-4xl mx-auto aspect-square md:aspect-video lg:aspect-[16/9] flex flex-col">
+                            <!-- Axis Labels -->
+                            <div
+                                class="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-8 text-xs font-bold uppercase tracking-widest text-gray-500">
+                                Flexibility</div>
+                            <div
+                                class="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-8 text-xs font-bold uppercase tracking-widest text-gray-500">
+                                Stability</div>
+                            <div
+                                class="absolute left-0 top-1/2 -translate-x-8 -translate-y-1/2 -rotate-90 text-xs font-bold uppercase tracking-widest text-gray-500">
+                                Internal</div>
+                            <div
+                                class="absolute right-0 top-1/2 translate-x-8 -translate-y-1/2 rotate-90 text-xs font-bold uppercase tracking-widest text-gray-500">
+                                External</div>
+
+                            <div class="grid grid-cols-2 grid-rows-2 gap-2 h-full">
+                                <!-- Clan -->
+                                <div class="reveal reveal-right h-full">
+                                    <div
+                                        class="h-full bg-gradient-to-br from-yellow-500/10 to-yellow-500/5 border border-yellow-500/20 rounded-tl-3xl p-6 hover:bg-yellow-500/20 transition-all duration-500 flex flex-col justify-between group">
+                                        <div class="text-right text-xs text-yellow-500/50 font-mono">Internal / Flexible
+                                        </div>
+                                        <div>
+                                            <h3 class="text-2xl font-bold text-yellow-400 mb-2">Clan</h3>
+                                            <p
+                                                class="text-sm text-gray-300 opacity-70 group-hover:opacity-100 transition-opacity">
+                                                Family-like, Mentoring, Collaboration.</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Adhocracy -->
+                                <div class="reveal reveal-left h-full">
+                                    <div
+                                        class="h-full bg-gradient-to-bl from-purple-500/10 to-purple-500/5 border border-purple-500/20 rounded-tr-3xl p-6 hover:bg-purple-500/20 transition-all duration-500 flex flex-col justify-between group">
+                                        <div class="text-right text-xs text-purple-500/50 font-mono">External / Flexible
+                                        </div>
+                                        <div>
+                                            <h3 class="text-2xl font-bold text-purple-400 mb-2">Adhocracy</h3>
+                                            <p
+                                                class="text-sm text-gray-300 opacity-70 group-hover:opacity-100 transition-opacity">
+                                                Dynamic, Entrepreneurial, Innovation (e.g., Google).</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Hierarchy -->
+                                <div class="reveal reveal-right h-full" style="transition-delay: 200ms;">
+                                    <div
+                                        class="h-full bg-gradient-to-tr from-blue-500/10 to-blue-500/5 border border-blue-500/20 rounded-bl-3xl p-6 hover:bg-blue-500/20 transition-all duration-500 flex flex-col justify-between group">
+                                        <div>
+                                            <h3 class="text-2xl font-bold text-blue-400 mb-2">Hierarchy</h3>
+                                            <p
+                                                class="text-sm text-gray-300 opacity-70 group-hover:opacity-100 transition-opacity">
+                                                Structured, Efficient, Control, Rules.</p>
+                                        </div>
+                                        <div class="text-right text-xs text-blue-500/50 font-mono">Internal / Stable
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Market -->
+                                <div class="reveal reveal-left h-full" style="transition-delay: 200ms;">
+                                    <div
+                                        class="h-full bg-gradient-to-tl from-red-500/10 to-red-500/5 border border-red-500/20 rounded-br-3xl p-6 hover:bg-red-500/20 transition-all duration-500 flex flex-col justify-between group">
+                                        <div>
+                                            <h3 class="text-2xl font-bold text-red-400 mb-2">Market</h3>
+                                            <p
+                                                class="text-sm text-gray-300 opacity-70 group-hover:opacity-100 transition-opacity">
+                                                Results-oriented, Competitive, Achievement.</p>
+                                        </div>
+                                        <div class="text-right text-xs text-red-500/50 font-mono">External / Stable
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Downloads Section -->
+                <section id="downloads" class="py-24 px-6 relative overflow-hidden">
+                    <div
+                        class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full max-w-4xl opacity-10 pointer-events-none">
+                        <div class="absolute top-0 right-0 w-96 h-96 bg-brand-primary rounded-full blur-[120px]"></div>
+                        <div class="absolute bottom-0 left-0 w-96 h-96 bg-brand-accent rounded-full blur-[120px]"></div>
+                    </div>
+
+                    <div class="max-w-7xl mx-auto relative z-10">
+                        <div class="reveal reveal-up">
+                            <div class="text-center mb-16">
+                                <div
+                                    class="inline-block px-3 py-1 mb-4 rounded-full bg-brand-accent/10 border border-brand-accent/20 text-brand-accent text-xs font-bold uppercase tracking-widest">
+                                    Bonus Content
+                                </div>
+                                <h2 class="text-4xl md:text-5xl font-display font-bold mb-4">Downloads & Resources</h2>
+                                <p class="text-xl text-gray-400 max-w-2xl mx-auto">
+                                    Access the complete presentation materials, research documents, and visual guides
+                                    used in this project.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="grid md:grid-cols-2 gap-6 lg:gap-8">
+                            <!-- Download 1 -->
+                            <div class="reveal reveal-left" style="transition-delay: 0ms;">
+                                <div
+                                    class="group relative p-1 rounded-2xl bg-gradient-to-br from-white/10 to-transparent hover:from-brand-accent/50 hover:to-brand-primary/50 transition-all duration-500 h-full">
+                                    <div
+                                        class="relative h-full bg-brand-dark/90 backdrop-blur-xl rounded-xl p-8 border border-white/5 flex flex-col md:flex-row items-center md:items-start gap-6 group-hover:bg-brand-dark/80 transition-all duration-300">
+                                        <div
+                                            class="shrink-0 w-16 h-16 rounded-2xl flex items-center justify-center bg-white/5 group-hover:scale-110 transition-transform duration-500 border border-white/5 shadow-none">
+                                            <i data-lucide="file-text" class="w-8 h-8 text-red-400"></i>
+                                        </div>
+                                        <div class="flex-1 text-center md:text-left">
+                                            <h3 class="text-xl font-bold mb-2 group-hover:text-white transition-colors">
+                                                Principles Presentation</h3>
+                                            <p class="text-sm text-gray-400 mb-4 leading-relaxed">The complete slide
+                                                deck covering Scientific Management to Modern Culture.</p>
+                                            <div class="flex items-center justify-center md:justify-start gap-3">
+                                                <span
+                                                    class="text-xs font-mono text-gray-500 bg-black/40 px-2 py-1 rounded border border-white/5 uppercase tracking-wide">PDF</span>
+                                                <span class="text-xs font-mono text-gray-500">2.4 MB</span>
+                                            </div>
+                                        </div>
+                                        <div class="mt-4 md:mt-0 self-center shrink-0">
+                                            <button
+                                                class="download-btn relative overflow-hidden p-3 rounded-full transition-all duration-300 border shadow-lg bg-white/5 hover:bg-brand-accent hover:text-brand-dark border-white/10 hover:border-brand-accent hover:scale-110"
+                                                title="Download File">
+                                                <div class="relative z-10 flex items-center justify-center">
+                                                    <i data-lucide="download" class="w-5 h-5"></i>
+                                                </div>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Download 2 -->
+                            <div class="reveal reveal-right" style="transition-delay: 100ms;">
+                                <div
+                                    class="group relative p-1 rounded-2xl bg-gradient-to-br from-white/10 to-transparent hover:from-brand-accent/50 hover:to-brand-primary/50 transition-all duration-500 h-full">
+                                    <div
+                                        class="relative h-full bg-brand-dark/90 backdrop-blur-xl rounded-xl p-8 border border-white/5 flex flex-col md:flex-row items-center md:items-start gap-6 group-hover:bg-brand-dark/80 transition-all duration-300">
+                                        <div
+                                            class="shrink-0 w-16 h-16 rounded-2xl flex items-center justify-center bg-white/5 group-hover:scale-110 transition-transform duration-500 border border-white/5 shadow-none">
+                                            <i data-lucide="file-type" class="w-8 h-8 text-blue-400"></i>
+                                        </div>
+                                        <div class="flex-1 text-center md:text-left">
+                                            <h3 class="text-xl font-bold mb-2 group-hover:text-white transition-colors">
+                                                Executive Summary</h3>
+                                            <p class="text-sm text-gray-400 mb-4 leading-relaxed">A concise written
+                                                summary of the key management theories discussed.</p>
+                                            <div class="flex items-center justify-center md:justify-start gap-3">
+                                                <span
+                                                    class="text-xs font-mono text-gray-500 bg-black/40 px-2 py-1 rounded border border-white/5 uppercase tracking-wide">DOCX</span>
+                                                <span class="text-xs font-mono text-gray-500">1.1 MB</span>
+                                            </div>
+                                        </div>
+                                        <div class="mt-4 md:mt-0 self-center shrink-0">
+                                            <button
+                                                class="download-btn relative overflow-hidden p-3 rounded-full transition-all duration-300 border shadow-lg bg-white/5 hover:bg-brand-accent hover:text-brand-dark border-white/10 hover:border-brand-accent hover:scale-110"
+                                                title="Download File">
+                                                <div class="relative z-10 flex items-center justify-center">
+                                                    <i data-lucide="download" class="w-5 h-5"></i>
+                                                </div>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Download 3 -->
+                            <div class="reveal reveal-left" style="transition-delay: 200ms;">
+                                <div
+                                    class="group relative p-1 rounded-2xl bg-gradient-to-br from-white/10 to-transparent hover:from-brand-accent/50 hover:to-brand-primary/50 transition-all duration-500 h-full">
+                                    <div
+                                        class="relative h-full bg-brand-dark/90 backdrop-blur-xl rounded-xl p-8 border border-white/5 flex flex-col md:flex-row items-center md:items-start gap-6 group-hover:bg-brand-dark/80 transition-all duration-300">
+                                        <div
+                                            class="shrink-0 w-16 h-16 rounded-2xl flex items-center justify-center bg-white/5 group-hover:scale-110 transition-transform duration-500 border border-white/5 shadow-none">
+                                            <i data-lucide="file-check" class="w-8 h-8 text-yellow-400"></i>
+                                        </div>
+                                        <div class="flex-1 text-center md:text-left">
+                                            <h3 class="text-xl font-bold mb-2 group-hover:text-white transition-colors">
+                                                Case Study Analysis</h3>
+                                            <p class="text-sm text-gray-400 mb-4 leading-relaxed">Deep dive into
+                                                real-world examples of organizational adaptation.</p>
+                                            <div class="flex items-center justify-center md:justify-start gap-3">
+                                                <span
+                                                    class="text-xs font-mono text-gray-500 bg-black/40 px-2 py-1 rounded border border-white/5 uppercase tracking-wide">PDF</span>
+                                                <span class="text-xs font-mono text-gray-500">3.5 MB</span>
+                                            </div>
+                                        </div>
+                                        <div class="mt-4 md:mt-0 self-center shrink-0">
+                                            <button
+                                                class="download-btn relative overflow-hidden p-3 rounded-full transition-all duration-300 border shadow-lg bg-white/5 hover:bg-brand-accent hover:text-brand-dark border-white/10 hover:border-brand-accent hover:scale-110"
+                                                title="Download File">
+                                                <div class="relative z-10 flex items-center justify-center">
+                                                    <i data-lucide="download" class="w-5 h-5"></i>
+                                                </div>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Download 4 -->
+                            <div class="reveal reveal-right" style="transition-delay: 300ms;">
+                                <div
+                                    class="group relative p-1 rounded-2xl bg-gradient-to-br from-white/10 to-transparent hover:from-brand-accent/50 hover:to-brand-primary/50 transition-all duration-500 h-full">
+                                    <div
+                                        class="relative h-full bg-brand-dark/90 backdrop-blur-xl rounded-xl p-8 border border-white/5 flex flex-col md:flex-row items-center md:items-start gap-6 group-hover:bg-brand-dark/80 transition-all duration-300">
+                                        <div
+                                            class="shrink-0 w-16 h-16 rounded-2xl flex items-center justify-center bg-white/5 group-hover:scale-110 transition-transform duration-500 border border-white/5 shadow-[0_0_30px_rgba(6,182,212,0.2)]">
+                                            <i data-lucide="video" class="w-8 h-8 text-brand-accent"></i>
+                                        </div>
+                                        <div class="flex-1 text-center md:text-left">
+                                            <h3 class="text-xl font-bold mb-2 group-hover:text-white transition-colors">
+                                                Open Systems Explainer</h3>
+                                            <p class="text-sm text-gray-400 mb-4 leading-relaxed">Animated video
+                                                breakdown of the External Environment forces.</p>
+                                            <div class="flex items-center justify-center md:justify-start gap-3">
+                                                <span
+                                                    class="text-xs font-mono text-gray-500 bg-black/40 px-2 py-1 rounded border border-white/5 uppercase tracking-wide">MP4</span>
+                                                <span class="text-xs font-mono text-gray-500">45 MB</span>
+                                            </div>
+                                        </div>
+                                        <div class="mt-4 md:mt-0 self-center shrink-0">
+                                            <a href="https://drive.google.com/file/d/1cMprSCtsN61axCXbUV9WBPMk3y8nkEv5/view?usp=sharing"
+                                                target="_blank" rel="noopener noreferrer"
+                                                class="relative overflow-hidden p-3 rounded-full transition-all duration-300 border shadow-lg bg-white/5 hover:bg-brand-accent hover:text-brand-dark border-white/10 hover:border-brand-accent hover:scale-110"
+                                                title="Watch Video">
+                                                <div class="relative z-10 flex items-center justify-center">
+                                                    <i data-lucide="play-circle" class="w-5 h-5"></i>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="reveal reveal-up" style="transition-delay: 400ms;">
+                            <div class="mt-12 text-center text-xs text-gray-600 font-mono">
+                                * Files are protected by copyright of Black Falcons Team.
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+
+        <footer class="py-12 bg-black border-t border-white/10 relative overflow-hidden">
+            <div class="max-w-7xl mx-auto px-6 relative z-10">
+                <div class="grid md:grid-cols-3 gap-8 mb-8">
+                    <div>
+                        <h4 class="font-display font-bold text-xl mb-4">Black Falcons</h4>
+                        <p class="text-gray-500 text-sm">Delivering complex management information in a simple, dynamic
+                            way.</p>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-lg mb-4 text-brand-primary">Key Takeaways</h4>
+                        <ul class="text-sm text-gray-400 space-y-2">
+                            <li>• Management is an Art, not just Science.</li>
+                            <li>• Contingency: "It Depends".</li>
+                            <li>• Fit: Environment + Structure + Culture.</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-lg mb-4 text-brand-accent">Connect</h4>
+                        <p class="text-sm text-gray-400">Presented by Group 1 for Principles of Management.</p>
+                        <div class="mt-4 font-mono text-xs text-brand-accent/50">Project: zaid_sh</div>
+                    </div>
+                </div>
+                <div class="text-center pt-8 border-t border-white/5 text-gray-600 text-sm">
+                    &copy; <span id="year"></span> Black Falcons Team. All rights reserved.
+                </div>
+            </div>
+        </footer>
+
+        <!-- Scroll to top -->
+        <button onclick="window.scrollTo({ top: 0, behavior: 'smooth' })" id="scroll-top-btn"
+            class="fixed bottom-8 right-8 z-40 p-3 rounded-full bg-brand-accent text-brand-dark shadow-lg shadow-brand-accent/20 transition-all duration-300 transform hover:scale-110 translate-y-20 opacity-0">
+            <i data-lucide="chevron-up" class="w-6 h-6"></i>
+        </button>
+    </div>
+    <!-- Main Logic -->
+    <script src="js/main.js"></script>
+</body>
+
+</html>
